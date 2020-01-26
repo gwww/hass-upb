@@ -1,0 +1,8 @@
+{
+  "domain": "upb",
+  "name": "Universal Powerline Bus (UPB)",
+  "documentation": "https://example.com",
+  "requirements": ["upb_lib==0.0.1"],
+  "dependencies": [],
+  "codeowners": []
+}

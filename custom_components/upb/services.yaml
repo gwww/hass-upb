@@ -1,0 +1,28 @@
+# Describes the format for available UPB scene services
+
+upb_link_activate:
+  description: Activate a UPB scene.
+  fields:
+    entity_id:
+      description: Name(s) of scenes to activate
+      example: "scene.hygge"
+
+upb_link_deactivate:
+  description: Deactivate a UPB scene.
+  fields:
+    entity_id:
+      description: Name(s) of scenes to deactivate
+      example: "scene.hygge"
+
+upb_link_goto:
+  description: Set all lights in scene at brightness
+  fields:
+    entity_id:
+      description: Name(s) of scenes to deactivate
+      example: "scene.hygge"
+    brightness_pct:
+      description: Brightness of lights in scene from 0 to 100
+      example: 42
+    rate:
+      description: Rate for scene to transition to new brightness
+      example: 3

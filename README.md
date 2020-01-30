@@ -24,3 +24,15 @@ This component is under active development. Treat this as an alpha level compone
 That means that naming of devices, entity_ids, and unique_ids may change, meaning that your UPB configuration may need to be redone.
 
 Feature suggestions, bug reports, and design thoughts all welcome.
+
+## Debugging Information
+
+Debug logs are useful when reporting a problem. Add the following to your `configuration.yaml` to turn on the UPB debug logs.
+
+```
+logger:
+  default: info
+  logs:
+    custom_components.upb: debug
+    upb_lib: debug
+```

@@ -5,13 +5,18 @@ import re
 import upb_lib
 import voluptuous as vol
 
-from homeassistant.helpers.entity import Entity
+from homeassistant.const import ATTR_ENTITY_ID, CONF_FILE_PATH, CONF_URL
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers import config_validation as cv, discovery
+from homeassistant.helpers.dispatcher import (
+    async_dispatcher_connect,
+    async_dispatcher_send,
+)
+from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.typing import ConfigType
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS, PLATFORM_SCHEMA, Light)
-from homeassistant.const import CONF_FILE_PATH, CONF_URL
+
 
 DOMAIN = "upb"
 
@@ -19,6 +24,7 @@ _LOGGER = logging.getLogger(__name__)
 
 SUPPORTED_DOMAINS = [
     "light",
+    "scene",
 ]
 
 # Validation of the user's configuration
@@ -59,17 +65,6 @@ async def async_setup(hass: HomeAssistant, hass_config: ConfigType) -> bool:
         )
 
     return True
-
-
-# def create_upb_entities(upb_data, upb_elements, element_type, class_, entities):
-#     """Create the UPB devices of a particular class."""
-#     if upb_data["config"][element_type]["enabled"]:
-#         upb = upb_data["upb"]
-#         _LOGGER.debug("Creating upb entities for %s", upb)
-#         for element in upb_elements:
-#             if upb_data["config"][element_type]["included"][element.index]:
-#                 entities.append(class_(element, upb, upb_data))
-#     return entities
 
 
 class UpbEntity(Entity):
@@ -127,3 +122,41 @@ class UpbEntity(Entity):
         """Register callback for UPB changes and update entity state."""
         self._element.add_callback(self._element_callback)
         self._element_callback(self._element, {})
+
+
+_services = {}
+
+def create_entity_service(hass, domain, platform, service_name, schema):
+    """Register a service and save it for connecting later."""
+    def _handle_service_call(service):
+        entity_ids = service.data.get(ATTR_ENTITY_ID, [])
+        for entity_id in entity_ids:
+            async_dispatcher_send(
+                hass,
+                f"SIGNAL_{service.service}_{entity_id}",
+                service.data
+            )
+
+    service_key = (domain, platform)
+    if _services.get(service_key) is None:
+        _services[service_key] = []
+    _services[service_key].append(service_name)
+
+    hass.services.async_register(
+        domain,
+        service_name,
+        _handle_service_call,
+        schema,
+    )
+
+
+def connect_entity_services(domain, platform, entity):
+    """Connect to saved services."""
+    service_names = _services.get((domain, platform), [])
+    for service_name in service_names:
+        service_method = getattr(entity, service_name)
+        async_dispatcher_connect(
+            entity.hass,
+            f"SIGNAL_{service_name}_{entity.entity_id}",
+            service_method,
+        )

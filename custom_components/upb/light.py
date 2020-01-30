@@ -25,7 +25,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     upb = hass.data[DOMAIN]["upb"]
     async_add_entities(UpbLight(upb.lights[light], upb) for light in upb.lights)
-    async_add_entities(UpbLink(upb.links[link], upb) for link in upb.links)
+    # async_add_entities(UpbLink(upb.links[link], upb) for link in upb.links)
 
 
 class UpbLight(UpbEntity, Light):
@@ -69,39 +69,39 @@ class UpbLight(UpbEntity, Light):
         self._brightness = round(status * 2.55)
 
 
-class UpbLink(UpbEntity, Light):
-    """Representation of an UPB Light."""
+# class UpbLink(UpbEntity, Light):
+#     """Representation of an UPB Light."""
 
-    def __init__(self, element, upb):
-        """Initialize an UpbLight."""
-        super().__init__(element, upb)
-        self._brightness = self._element.status
+#     def __init__(self, element, upb):
+#         """Initialize an UpbLight."""
+#         super().__init__(element, upb)
+#         self._brightness = self._element.status
 
-    @property
-    def supported_features(self):
-        """Flag supported features."""
-        return SUPPORT_BRIGHTNESS | SUPPORT_TRANSITION
+#     @property
+#     def supported_features(self):
+#         """Flag supported features."""
+#         return SUPPORT_BRIGHTNESS | SUPPORT_TRANSITION
 
-    @property
-    def brightness(self):
-        """Get the brightness."""
-        return self._brightness
+#     @property
+#     def brightness(self):
+#         """Get the brightness."""
+#         return self._brightness
 
-    @property
-    def is_on(self) -> bool:
-        """Get the current brightness."""
-        return self._brightness != 0
+#     @property
+#     def is_on(self) -> bool:
+#         """Get the current brightness."""
+#         return self._brightness != 0
 
-    async def async_turn_on(self, **kwargs):
-        """Turn on the light."""
-        rate = kwargs.get(ATTR_TRANSITION, -1)
-        brightness = round(kwargs.get(ATTR_BRIGHTNESS, -2.55) / 2.55)
-        self._element.turn_on(brightness, rate)
+#     async def async_turn_on(self, **kwargs):
+#         """Turn on the light."""
+#         rate = kwargs.get(ATTR_TRANSITION, -1)
+#         brightness = round(kwargs.get(ATTR_BRIGHTNESS, -2.55) / 2.55)
+#         self._element.turn_on(brightness, rate)
 
-    async def async_turn_off(self, **kwargs):
-        """Turn off the light."""
-        self._element.deactivate()
+#     async def async_turn_off(self, **kwargs):
+#         """Turn off the light."""
+#         self._element.deactivate()
 
-    def _element_changed(self, element, changeset):
-        status = self._element.status
-        self._brightness = round(status * 2.55)
+#     def _element_changed(self, element, changeset):
+#         status = self._element.status
+#         self._brightness = round(status * 2.55)

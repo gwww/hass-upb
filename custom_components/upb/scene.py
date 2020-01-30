@@ -4,8 +4,8 @@ import voluptuous as vol
 
 from . import UpbEntity, DOMAIN, create_entity_service, connect_entity_services
 
-from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.components.scene import Scene
+from homeassistant.const import ATTR_ENTITY_ID
 import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)

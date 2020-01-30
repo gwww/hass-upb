@@ -31,10 +31,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     if discovery_info is None:
         return
 
-    create_entity_service(hass, DOMAIN, PLATFORM, "upb_link_activate", UPB_LINK_ACTIVATE_SCHEMA)
+    create_entity_service(
+        hass, DOMAIN, PLATFORM, "upb_link_activate", UPB_LINK_ACTIVATE_SCHEMA)
     create_entity_service(
         hass, DOMAIN, PLATFORM, "upb_link_deactivate", UPB_LINK_DEACTIVATE_SCHEMA)
-    create_entity_service(hass, DOMAIN, PLATFORM, "upb_link_goto", UPB_LINK_GOTO_SCHEMA)
+    create_entity_service(
+        hass, DOMAIN, PLATFORM, "upb_link_goto", UPB_LINK_GOTO_SCHEMA)
 
     upb = hass.data[DOMAIN]["upb"]
     async_add_entities(UpbLink(upb.links[link], upb) for link in upb.links)

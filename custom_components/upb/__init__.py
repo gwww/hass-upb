@@ -19,19 +19,13 @@ from homeassistant.components.light import (
 
 
 DOMAIN = "upb"
-
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORTED_DOMAINS = [
-    "light",
-    "scene",
-]
-
 # Validation of the user's configuration
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_URL): cv.string,
-    vol.Optional(CONF_FILE_PATH, default=None): cv.string,
-})
+# PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
+#     vol.Required(CONF_URL): cv.string,
+#     vol.Optional(CONF_FILE_PATH, default=None): cv.string,
+# })
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -59,11 +53,10 @@ async def async_setup(hass: HomeAssistant, hass_config: ConfigType) -> bool:
     upb.connect()
 
     hass.data[DOMAIN] = {"upb": upb}
-    for component in SUPPORTED_DOMAINS:
+    for component in ["light", "scene"]:
         hass.async_create_task(
             discovery.async_load_platform(hass, component, DOMAIN, {}, hass_config)
         )
-
     return True
 
 
@@ -74,10 +67,8 @@ class UpbEntity(Entity):
         """Initialize the base of all UPB devices."""
         self._upb = upb
         self._element = element
-        self._unique_id = "{}_{}".format(
-            self.__class__.__name__.lower(), element.index)
-        _LOGGER.debug("'{}' created, unique_id {}".format(
-            element.name, self._unique_id))
+        self._unique_id = f"{self.__class__.__name__.lower()}_{element.index}"
+        _LOGGER.debug(f"'{element.name}' created, unique_id {self._unique_id}")
 
     @property
     def name(self):

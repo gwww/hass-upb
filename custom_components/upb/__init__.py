@@ -51,8 +51,10 @@ async def async_setup(hass: HomeAssistant, hass_config: ConfigType) -> bool:
         }
     )
     upb.connect()
-
     hass.data[DOMAIN] = {"upb": upb}
+
+    init_entity_service(hass, DOMAIN)
+
     for component in ["light", "scene"]:
         hass.async_create_task(
             discovery.async_load_platform(hass, component, DOMAIN, {}, hass_config)
@@ -115,7 +117,9 @@ class UpbEntity(Entity):
         self._element_callback(self._element, {})
 
 
-_services = {}
+def init_entity_service(hass, domain):
+    """Initialize entity service helpers."""
+    hass.data[domain]['services'] = {}
 
 def create_entity_service(hass, domain, platform, service_name, schema):
     """Register a service and save it for connecting later."""
@@ -128,10 +132,11 @@ def create_entity_service(hass, domain, platform, service_name, schema):
                 service.data
             )
 
+    services = hass.data[domain]['services']
     service_key = (domain, platform)
-    if _services.get(service_key) is None:
-        _services[service_key] = []
-    _services[service_key].append(service_name)
+    if services.get(service_key) is None:
+        services[service_key] = []
+    services[service_key].append(service_name)
 
     hass.services.async_register(
         domain,
@@ -143,7 +148,8 @@ def create_entity_service(hass, domain, platform, service_name, schema):
 
 def connect_entity_services(domain, platform, entity):
     """Connect to saved services."""
-    service_names = _services.get((domain, platform), [])
+    services = entity.hass.data[domain]['services']
+    service_names = services.get((domain, platform), [])
     for service_name in service_names:
         service_method = getattr(entity, service_name)
         async_dispatcher_connect(

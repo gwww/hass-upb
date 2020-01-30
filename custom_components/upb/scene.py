@@ -11,19 +11,21 @@ import homeassistant.helpers.config_validation as cv
 _LOGGER = logging.getLogger(__name__)
 PLATFORM = "Scene"
 
-UPB_LINK_ACTIVATE_SCHEMA = vol.Schema({
-    vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
-})
+UPB_LINK_ACTIVATE_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
+)
 UPB_LINK_DEACTIVATE_SCHEMA = UPB_LINK_ACTIVATE_SCHEMA
-UPB_LINK_GOTO_SCHEMA = vol.Schema({
-    vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
-    vol.Required("brightness_pct"): vol.All(
-        vol.Coerce(int), vol.Range(min=0, max=100)
-    ),
-    vol.Optional("rate", default=-1): vol.All(
-        vol.Coerce(int), vol.Range(min=-1, max=255)
-    ),
-})
+UPB_LINK_GOTO_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
+        vol.Required("brightness_pct"): vol.All(
+            vol.Coerce(int), vol.Range(min=0, max=100)
+        ),
+        vol.Optional("rate", default=-1): vol.All(
+            vol.Coerce(int), vol.Range(min=-1, max=255)
+        ),
+    }
+)
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -32,11 +34,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         return
 
     create_entity_service(
-        hass, DOMAIN, PLATFORM, "upb_link_activate", UPB_LINK_ACTIVATE_SCHEMA)
+        hass, DOMAIN, PLATFORM, "upb_link_activate", UPB_LINK_ACTIVATE_SCHEMA
+    )
     create_entity_service(
-        hass, DOMAIN, PLATFORM, "upb_link_deactivate", UPB_LINK_DEACTIVATE_SCHEMA)
-    create_entity_service(
-        hass, DOMAIN, PLATFORM, "upb_link_goto", UPB_LINK_GOTO_SCHEMA)
+        hass, DOMAIN, PLATFORM, "upb_link_deactivate", UPB_LINK_DEACTIVATE_SCHEMA
+    )
+    create_entity_service(hass, DOMAIN, PLATFORM, "upb_link_goto", UPB_LINK_GOTO_SCHEMA)
 
     upb = hass.data[DOMAIN]["upb"]
     async_add_entities(UpbLink(upb.links[link], upb) for link in upb.links)

@@ -4,7 +4,7 @@ import re
 import upb_lib
 import voluptuous as vol
 
-from homeassistant.components.light import ATTR_BRIGHTNESS, PLATFORM_SCHEMA, Light
+from homeassistant.components.light import ATTR_BRIGHTNESS, Light
 from homeassistant.const import ATTR_ENTITY_ID, CONF_FILE_PATH, CONF_URL
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv, discovery

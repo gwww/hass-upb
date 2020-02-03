@@ -57,6 +57,20 @@ class UpbLink(UpbEntity, Scene):
         await super().async_added_to_hass()
         connect_entity_services(DOMAIN, PLATFORM, self)
 
+    def _element_changed(self, element, changeset):
+        if changeset.get("last_change") is None:
+            return
+
+        data = {"entity_id": self.entity_id}
+        command = changeset["last_change"]["command"]
+        if command == "goto":
+            event = f"{DOMAIN}.scene_{command}"
+            data["level"] = changeset["last_change"]["level"]
+        else:
+            event = f"{DOMAIN}.scene_{command}d"
+
+        self.hass.bus.fire(event, data)
+
     async def async_activate(self):
         """Activate the task."""
         self._element.activate()

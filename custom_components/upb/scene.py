@@ -61,7 +61,7 @@ class UpbLink(UpbEntity, Scene):
         command = changeset["last_change"]["command"]
         if command == "goto":
             event = f"{DOMAIN}.scene_{command}"
-            data["level"] = changeset["last_change"]["level"]
+            data["brightness_pct"] = changeset["last_change"]["level"]
             rate = changeset["last_change"].get("rate")
             if rate:
                 data["rate"] = rate

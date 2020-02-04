@@ -12,8 +12,10 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
     ATTR_BRIGHTNESS_PCT,
+    ATTR_FLASH,
     ATTR_TRANSITION,
     SUPPORT_BRIGHTNESS,
+    SUPPORT_FLASH,
     SUPPORT_TRANSITION,
     Light,
 )
@@ -77,8 +79,8 @@ class UpbLight(UpbEntity, Light):
     def supported_features(self):
         """Flag supported features."""
         if self._element.dimmable:
-            return SUPPORT_BRIGHTNESS | SUPPORT_TRANSITION
-        return 0
+            return SUPPORT_BRIGHTNESS | SUPPORT_TRANSITION | SUPPORT_FLASH
+        return SUPPORT_FLASH
 
     @property
     def brightness(self):
@@ -92,9 +94,16 @@ class UpbLight(UpbEntity, Light):
 
     async def async_turn_on(self, **kwargs):
         """Turn on the light."""
-        rate = kwargs.get(ATTR_TRANSITION, -1)
-        brightness = round(kwargs.get(ATTR_BRIGHTNESS, 255) / 2.55)
-        self._element.turn_on(brightness, rate)
+        flash = kwargs.get(ATTR_FLASH)
+        if flash:
+            if flash == "short":
+                self._element.blink(50)
+            else:
+                self._element.blink(100)
+        else:
+            rate = kwargs.get(ATTR_TRANSITION, -1)
+            brightness = round(kwargs.get(ATTR_BRIGHTNESS, 255) / 2.55)
+            self._element.turn_on(brightness, rate)
 
     async def async_turn_off(self, **kwargs):
         """Turn off the light."""

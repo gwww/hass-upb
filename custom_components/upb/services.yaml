@@ -26,3 +26,34 @@ upb_link_goto:
     rate:
       description: Rate for scene to transition to new brightness
       example: 3
+
+upb_light_fade_start:
+  description: Start fading a light.
+  fields:
+    entity_id:
+      description: Name(s) of lights to start fading
+      example: "light.kitchen"
+    brightness_pct:
+      description: Brightness of light from 0 to 100
+      example: 42
+    rate:
+      description: Rate for light to transition to new brightness
+      example: 3
+
+upb_light_fade_stop:
+  description: Stop a light fade.
+  fields:
+    entity_id:
+      description: Name(s) of lights to stop fadding
+      example: "light.kitchen, light.family_room"
+
+upb_light_blink:
+  description: Blink a light
+  fields:
+    entity_id:
+      description: Name(s) of lights to start fading
+      example: "light.kitchen"
+    rate:
+      description: Rate for light to blink
+      example: 3
+

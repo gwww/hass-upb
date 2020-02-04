@@ -4,18 +4,46 @@ import logging
 import upb_lib
 import voluptuous as vol
 
-from . import UpbEntity, DOMAIN
+from . import UpbEntity, DOMAIN, create_entity_service, connect_entity_services
+
+from homeassistant.const import ATTR_ENTITY_ID
+import homeassistant.helpers.config_validation as cv
 
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
+    ATTR_BRIGHTNESS_PCT,
     ATTR_TRANSITION,
     SUPPORT_BRIGHTNESS,
-    SUPPORT_FLASH,
     SUPPORT_TRANSITION,
     Light,
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+UPB_LIGHT_FADE_START_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
+        vol.Required(ATTR_BRIGHTNESS_PCT): vol.All(
+            vol.Coerce(int), vol.Range(min=0, max=100)
+        ),
+        vol.Optional("rate", default=-1): vol.All(
+            vol.Coerce(int), vol.Range(min=-1, max=255)
+        ),
+    }
+)
+
+UPB_LIGHT_FADE_STOP_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
+)
+
+UPB_LIGHT_BLINK_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
+        vol.Required("rate", default=20): vol.All(
+            vol.Coerce(int), vol.Range(min=0, max=255)
+        ),
+    }
+)
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -25,7 +53,16 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     upb = hass.data[DOMAIN]["upb"]
     async_add_entities(UpbLight(upb.lights[light], upb) for light in upb.lights)
-    # async_add_entities(UpbLink(upb.links[link], upb) for link in upb.links)
+
+    create_entity_service(
+        hass, DOMAIN, "UpbLight", "upb_light_fade_start", UPB_LIGHT_FADE_START_SCHEMA
+    )
+    create_entity_service(
+        hass, DOMAIN, "UpbLight", "upb_light_fade_stop", UPB_LIGHT_FADE_STOP_SCHEMA
+    )
+    create_entity_service(
+        hass, DOMAIN, "UpbLight", "upb_light_blink", UPB_LIGHT_BLINK_SCHEMA
+    )
 
 
 class UpbLight(UpbEntity, Light):
@@ -63,6 +100,18 @@ class UpbLight(UpbEntity, Light):
         """Turn off the light."""
         rate = kwargs.get(ATTR_TRANSITION, -1)
         self._element.turn_off(rate)
+
+    async def upb_light_fade_start(self, data):
+        """Start dimming a light."""
+        self._element.fade_start(data["brightness_pct"], data["rate"])
+
+    async def upb_light_fade_stop(self, data):
+        """Stop dimming a light."""
+        self._element.fade_stop()
+
+    async def upb_light_blink(self, data):
+        """Blink a light."""
+        self._element.blink(data["rate"])
 
     def _element_changed(self, element, changeset):
         status = self._element.status

@@ -104,6 +104,7 @@ class UpbEntity(Entity):
         """Register callback for UPB changes and update entity state."""
         self._element.add_callback(self._element_callback)
         self._element_callback(self._element, {})
+        connect_entity_services(DOMAIN, self.__class__.__name__, self)
 
 
 def init_entity_service(hass, domain):

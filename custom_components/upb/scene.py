@@ -9,7 +9,6 @@ from homeassistant.const import ATTR_ENTITY_ID
 import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
-PLATFORM = "Scene"
 
 UPB_LINK_ACTIVATE_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
@@ -34,12 +33,14 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         return
 
     create_entity_service(
-        hass, DOMAIN, PLATFORM, "upb_link_activate", UPB_LINK_ACTIVATE_SCHEMA
+        hass, DOMAIN, "UpbLink", "upb_link_activate", UPB_LINK_ACTIVATE_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, PLATFORM, "upb_link_deactivate", UPB_LINK_DEACTIVATE_SCHEMA
+        hass, DOMAIN, "UpbLink", "upb_link_deactivate", UPB_LINK_DEACTIVATE_SCHEMA
     )
-    create_entity_service(hass, DOMAIN, PLATFORM, "upb_link_goto", UPB_LINK_GOTO_SCHEMA)
+    create_entity_service(
+        hass, DOMAIN, "UpbLink", "upb_link_goto", UPB_LINK_GOTO_SCHEMA
+    )
 
     upb = hass.data[DOMAIN]["upb"]
     async_add_entities(UpbLink(upb.links[link], upb) for link in upb.links)
@@ -52,11 +53,6 @@ class UpbLink(UpbEntity, Scene):
         """Initialize an UpbLink."""
         super().__init__(element, upb)
 
-    async def async_added_to_hass(self):
-        """Register callback for ElkM1 changes."""
-        await super().async_added_to_hass()
-        connect_entity_services(DOMAIN, PLATFORM, self)
-
     def _element_changed(self, element, changeset):
         if changeset.get("last_change") is None:
             return
@@ -66,6 +62,9 @@ class UpbLink(UpbEntity, Scene):
         if command == "goto":
             event = f"{DOMAIN}.scene_{command}"
             data["level"] = changeset["last_change"]["level"]
+            rate = changeset["last_change"].get("rate")
+            if rate:
+                data["rate"] = rate
         else:
             event = f"{DOMAIN}.scene_{command}d"
 

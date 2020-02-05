@@ -133,10 +133,17 @@ def create_entity_service(hass, domain, platform, service_name, schema):
 
 def connect_entity_services(domain, platform, entity):
     """Connect to saved services."""
+    def wrapped_service_method(method):
+        async def wrapper(data):
+            args = {k: v for k, v in data.items() if k != ATTR_ENTITY_ID}
+            await method(**args)
+
+        return wrapper
+
     services = entity.hass.data[domain]["services"]
     service_names = services.get((domain, platform), [])
     for service_name in service_names:
-        service_method = getattr(entity, service_name)
+        service_method = wrapped_service_method(getattr(entity, service_name))
         async_dispatcher_connect(
             entity.hass, f"SIGNAL_{service_name}_{entity.entity_id}", service_method
         )

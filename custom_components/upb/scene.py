@@ -74,14 +74,14 @@ class UpbLink(UpbEntity, Scene):
         """Activate the task."""
         self._element.activate()
 
-    async def upb_link_activate(self, data):
+    async def upb_link_activate(self):
         """Activate the task."""
         self._element.activate()
 
-    async def upb_link_deactivate(self, data):
+    async def upb_link_deactivate(self):
         """Activate the task."""
         self._element.deactivate()
 
-    async def upb_link_goto(self, data):
+    async def upb_link_goto(self, brightness_pct, rate):
         """Activate the task."""
-        self._element.goto(data["brightness_pct"], data["rate"])
+        self._element.goto(brightness_pct, rate)

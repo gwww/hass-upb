@@ -110,17 +110,17 @@ class UpbLight(UpbEntity, Light):
         rate = kwargs.get(ATTR_TRANSITION, -1)
         self._element.turn_off(rate)
 
-    async def upb_light_fade_start(self, data):
+    async def upb_light_fade_start(self, brightness_pct, rate):
         """Start dimming a light."""
-        self._element.fade_start(data["brightness_pct"], data["rate"])
+        self._element.fade_start(brightness_pct, rate)
 
-    async def upb_light_fade_stop(self, data):
+    async def upb_light_fade_stop(self):
         """Stop dimming a light."""
         self._element.fade_stop()
 
-    async def upb_light_blink(self, data):
+    async def upb_light_blink(self, rate):
         """Blink a light."""
-        self._element.blink(data["rate"])
+        self._element.blink(rate)
 
     def _element_changed(self, element, changeset):
         status = self._element.status

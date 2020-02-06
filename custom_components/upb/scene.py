@@ -62,6 +62,7 @@ UPB_COMMAND_TO_EVENT_MAPPING = {
     "fade_stop": "fade_stopped",
 }
 
+
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the UPB scene platform."""
     if discovery_info is None:

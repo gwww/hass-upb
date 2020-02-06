@@ -133,6 +133,7 @@ def create_entity_service(hass, domain, platform, service_name, schema):
 
 def connect_entity_services(domain, platform, entity):
     """Connect to saved services."""
+
     def wrapped_service_method(method):
         async def wrapper(data):
             args = {k: v for k, v in data.items() if k != ATTR_ENTITY_ID}

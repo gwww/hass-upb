@@ -70,7 +70,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         hass, DOMAIN, "UpbLight", "upb_light_blink", UPB_LIGHT_BLINK_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLight", "upb_light_update_status", UPB_LIGHT_UPDATE_STATUS_SCHEMA
+        hass,
+        DOMAIN,
+        "UpbLight",
+        "upb_light_update_status",
+        UPB_LIGHT_UPDATE_STATUS_SCHEMA,
     )
 
 

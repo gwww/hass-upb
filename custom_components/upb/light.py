@@ -47,6 +47,10 @@ UPB_LIGHT_BLINK_SCHEMA = vol.Schema(
     }
 )
 
+UPB_LIGHT_UPDATE_STATUS_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
+)
+
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the UPB light platform."""
@@ -64,6 +68,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     )
     create_entity_service(
         hass, DOMAIN, "UpbLight", "upb_light_blink", UPB_LIGHT_BLINK_SCHEMA
+    )
+    create_entity_service(
+        hass, DOMAIN, "UpbLight", "upb_light_update_status", UPB_LIGHT_UPDATE_STATUS_SCHEMA
     )
 
 
@@ -121,6 +128,10 @@ class UpbLight(UpbEntity, Light):
     async def upb_light_blink(self, rate):
         """Blink a light."""
         self._element.blink(rate)
+
+    async def upb_light_update_status(self):
+        """Update the status of a light."""
+        self._element.update_status()
 
     def _element_changed(self, element, changeset):
         status = self._element.status

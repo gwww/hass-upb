@@ -1,10 +1,9 @@
 """Platform for UPB light integration."""
 import logging
 
-import upb_lib
 import voluptuous as vol
 
-from . import UpbEntity, DOMAIN, create_entity_service, connect_entity_services
+from . import UpbEntity, DOMAIN, create_entity_service
 
 from homeassistant.const import ATTR_ENTITY_ID
 import homeassistant.helpers.config_validation as cv

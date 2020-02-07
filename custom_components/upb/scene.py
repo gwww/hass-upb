@@ -2,7 +2,7 @@
 import logging
 import voluptuous as vol
 
-from . import UpbEntity, DOMAIN, create_entity_service, connect_entity_services
+from . import UpbEntity, DOMAIN, create_entity_service
 
 from homeassistant.components.light import ATTR_BRIGHTNESS_PCT
 from homeassistant.components.scene import Scene

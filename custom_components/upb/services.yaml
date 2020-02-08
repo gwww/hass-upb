@@ -55,7 +55,7 @@ upb_link_blink:
       example: "scene.hygge"
     rate:
       description: Rate for link to blink
-      example: 3
+      example: 60
 
 upb_light_fade_start:
   description: Start fading a light.
@@ -85,7 +85,7 @@ upb_light_blink:
       example: "light.kitchen"
     rate:
       description: Rate for light to blink
-      example: 3
+      example: 60
 
 upb_light_update_status:
   description: Cause a light to report its current status.

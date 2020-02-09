@@ -1,20 +1,20 @@
 # Describes the format for available UPB scene services
 
-upb_link_activate:
+link_activate:
   description: Activate a UPB scene.
   fields:
     entity_id:
       description: Name(s) of scenes to activate
       example: "scene.hygge"
 
-upb_link_deactivate:
+link_deactivate:
   description: Deactivate a UPB scene.
   fields:
     entity_id:
       description: Name(s) of scenes to deactivate
       example: "scene.hygge"
 
-upb_link_goto:
+link_goto:
   description: Set all lights in scene at brightness
   fields:
     entity_id:
@@ -27,7 +27,7 @@ upb_link_goto:
       description: Rate for scene to transition to new brightness
       example: 3
 
-upb_link_fade_start:
+link_fade_start:
   description: Start fading a link.
   fields:
     entity_id:
@@ -40,14 +40,14 @@ upb_link_fade_start:
       description: Rate for link to transition to new brightness
       example: 3
 
-upb_link_fade_stop:
+link_fade_stop:
   description: Stop a link fade.
   fields:
     entity_id:
       description: Name(s) of links to stop fadding
       example: "scene.dining, scene.no_tv"
 
-upb_link_blink:
+link_blink:
   description: Blink a link
   fields:
     entity_id:
@@ -57,7 +57,7 @@ upb_link_blink:
       description: Rate for link to blink
       example: 60
 
-upb_light_fade_start:
+light_fade_start:
   description: Start fading a light.
   fields:
     entity_id:
@@ -70,14 +70,14 @@ upb_light_fade_start:
       description: Rate for light to transition to new brightness
       example: 3
 
-upb_light_fade_stop:
+light_fade_stop:
   description: Stop a light fade.
   fields:
     entity_id:
       description: Name(s) of lights to stop fadding
       example: "light.kitchen, light.family_room"
 
-upb_light_blink:
+light_blink:
   description: Blink a light
   fields:
     entity_id:
@@ -87,7 +87,7 @@ upb_light_blink:
       description: Rate for light to blink
       example: 60
 
-upb_light_update_status:
+light_update_status:
   description: Cause a light to report its current status.
   fields:
     entity_id:

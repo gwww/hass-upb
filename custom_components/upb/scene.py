@@ -12,11 +12,11 @@ import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
-UPB_LINK_ACTIVATE_SCHEMA = vol.Schema(
+LINK_ACTIVATE_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
 )
-UPB_LINK_DEACTIVATE_SCHEMA = UPB_LINK_ACTIVATE_SCHEMA
-UPB_LINK_GOTO_SCHEMA = vol.Schema(
+LINK_DEACTIVATE_SCHEMA = LINK_ACTIVATE_SCHEMA
+LINK_GOTO_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
         vol.Required("brightness_pct"): vol.All(
@@ -28,7 +28,7 @@ UPB_LINK_GOTO_SCHEMA = vol.Schema(
     }
 )
 
-UPB_LINK_FADE_START_SCHEMA = vol.Schema(
+LINK_FADE_START_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
         vol.Required(ATTR_BRIGHTNESS_PCT): vol.All(
@@ -40,11 +40,11 @@ UPB_LINK_FADE_START_SCHEMA = vol.Schema(
     }
 )
 
-UPB_LINK_FADE_STOP_SCHEMA = vol.Schema(
+LINK_FADE_STOP_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
 )
 
-UPB_LINK_BLINK_SCHEMA = vol.Schema(
+LINK_BLINK_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
         vol.Required("rate", default=20): vol.All(
@@ -69,22 +69,22 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         return
 
     create_entity_service(
-        hass, DOMAIN, "UpbLink", "upb_link_activate", UPB_LINK_ACTIVATE_SCHEMA
+        hass, DOMAIN, "UpbLink", "link_activate", LINK_ACTIVATE_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLink", "upb_link_deactivate", UPB_LINK_DEACTIVATE_SCHEMA
+        hass, DOMAIN, "UpbLink", "link_deactivate", LINK_DEACTIVATE_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLink", "upb_link_goto", UPB_LINK_GOTO_SCHEMA
+        hass, DOMAIN, "UpbLink", "link_goto", LINK_GOTO_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLink", "upb_link_fade_start", UPB_LINK_FADE_START_SCHEMA
+        hass, DOMAIN, "UpbLink", "link_fade_start", LINK_FADE_START_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLink", "upb_link_fade_stop", UPB_LINK_FADE_STOP_SCHEMA
+        hass, DOMAIN, "UpbLink", "link_fade_stop", LINK_FADE_STOP_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLink", "upb_link_blink", UPB_LINK_BLINK_SCHEMA
+        hass, DOMAIN, "UpbLink", "link_blink", LINK_BLINK_SCHEMA
     )
 
     upb = hass.data[DOMAIN]["upb"]
@@ -117,26 +117,26 @@ class UpbLink(UpbEntity, Scene):
         """Activate the task."""
         self._element.activate()
 
-    async def upb_link_activate(self):
+    async def link_activate(self):
         """Activate the task."""
         self._element.activate()
 
-    async def upb_link_deactivate(self):
+    async def link_deactivate(self):
         """Activate the task."""
         self._element.deactivate()
 
-    async def upb_link_goto(self, brightness_pct, rate):
+    async def link_goto(self, brightness_pct, rate):
         """Activate the task."""
         self._element.goto(brightness_pct, rate)
 
-    async def upb_link_fade_start(self, brightness_pct, rate):
+    async def link_fade_start(self, brightness_pct, rate):
         """Start dimming a link."""
         self._element.fade_start(brightness_pct, rate)
 
-    async def upb_link_fade_stop(self):
+    async def link_fade_stop(self):
         """Stop dimming a link."""
         self._element.fade_stop()
 
-    async def upb_link_blink(self, rate):
+    async def link_blink(self, rate):
         """Blink a link."""
         self._element.blink(rate)

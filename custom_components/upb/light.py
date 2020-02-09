@@ -21,7 +21,7 @@ from homeassistant.components.light import (
 
 _LOGGER = logging.getLogger(__name__)
 
-UPB_LIGHT_FADE_START_SCHEMA = vol.Schema(
+LIGHT_FADE_START_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
         vol.Required(ATTR_BRIGHTNESS_PCT): vol.All(
@@ -33,11 +33,11 @@ UPB_LIGHT_FADE_START_SCHEMA = vol.Schema(
     }
 )
 
-UPB_LIGHT_FADE_STOP_SCHEMA = vol.Schema(
+LIGHT_FADE_STOP_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
 )
 
-UPB_LIGHT_BLINK_SCHEMA = vol.Schema(
+LIGHT_BLINK_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids,
         vol.Required("rate", default=20): vol.All(
@@ -46,7 +46,7 @@ UPB_LIGHT_BLINK_SCHEMA = vol.Schema(
     }
 )
 
-UPB_LIGHT_UPDATE_STATUS_SCHEMA = vol.Schema(
+LIGHT_UPDATE_STATUS_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTITY_ID, default=[]): cv.entity_ids}
 )
 
@@ -60,20 +60,20 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async_add_entities(UpbLight(upb.lights[light], upb) for light in upb.lights)
 
     create_entity_service(
-        hass, DOMAIN, "UpbLight", "upb_light_fade_start", UPB_LIGHT_FADE_START_SCHEMA
+        hass, DOMAIN, "UpbLight", "light_fade_start", LIGHT_FADE_START_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLight", "upb_light_fade_stop", UPB_LIGHT_FADE_STOP_SCHEMA
+        hass, DOMAIN, "UpbLight", "light_fade_stop", LIGHT_FADE_STOP_SCHEMA
     )
     create_entity_service(
-        hass, DOMAIN, "UpbLight", "upb_light_blink", UPB_LIGHT_BLINK_SCHEMA
+        hass, DOMAIN, "UpbLight", "light_blink", LIGHT_BLINK_SCHEMA
     )
     create_entity_service(
         hass,
         DOMAIN,
         "UpbLight",
-        "upb_light_update_status",
-        UPB_LIGHT_UPDATE_STATUS_SCHEMA,
+        "light_update_status",
+        LIGHT_UPDATE_STATUS_SCHEMA,
     )
 
 
@@ -120,19 +120,19 @@ class UpbLight(UpbEntity, Light):
         rate = kwargs.get(ATTR_TRANSITION, -1)
         self._element.turn_off(rate)
 
-    async def upb_light_fade_start(self, brightness_pct, rate):
+    async def light_fade_start(self, brightness_pct, rate):
         """Start dimming a light."""
         self._element.fade_start(brightness_pct, rate)
 
-    async def upb_light_fade_stop(self):
+    async def light_fade_stop(self):
         """Stop dimming a light."""
         self._element.fade_stop()
 
-    async def upb_light_blink(self, rate):
+    async def light_blink(self, rate):
         """Blink a light."""
         self._element.blink(rate)
 
-    async def upb_light_update_status(self):
+    async def light_update_status(self):
         """Update the status of a light."""
         self._element.update_status()
 

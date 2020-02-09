@@ -15,6 +15,7 @@ from homeassistant.helpers.typing import ConfigType
 
 
 DOMAIN = "upb"
+CONF_FLAGS = "flags"
 _LOGGER = logging.getLogger(__name__)
 
 CONFIG_SCHEMA = vol.Schema(
@@ -22,7 +23,8 @@ CONFIG_SCHEMA = vol.Schema(
         DOMAIN: vol.Schema(
             {
                 vol.Required(CONF_URL): cv.string,
-                vol.Optional(CONF_FILE_PATH, default=None): cv.string,
+                vol.Optional(CONF_FILE_PATH, default=""): cv.string,
+                vol.Optional(CONF_FLAGS, default=""): cv.string,
             }
         )
     },
@@ -35,7 +37,11 @@ async def async_setup(hass: HomeAssistant, hass_config: ConfigType) -> bool:
     conf = hass_config[DOMAIN]
 
     upb = upb_lib.UpbPim(
-        {"url": conf[CONF_URL], "UPStartExportFile": conf[CONF_FILE_PATH]}
+        {
+            "url": conf[CONF_URL],
+            "UPStartExportFile": conf[CONF_FILE_PATH],
+            "flags": conf[CONF_FLAGS],
+        }
     )
     upb.connect()
     hass.data[DOMAIN] = {"upb": upb}

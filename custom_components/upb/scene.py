@@ -56,7 +56,7 @@ UPB_LINK_BLINK_SCHEMA = vol.Schema(
 UPB_COMMAND_TO_EVENT_MAPPING = {
     "goto": "goto",
     "activate": "activated",
-    "deactivated": "deactivated",
+    "deactivate": "deactivated",
     "blink": "blink",
     "fade_start": "fade_started",
     "fade_stop": "fade_stopped",

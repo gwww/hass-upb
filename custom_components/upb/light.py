@@ -65,15 +65,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     create_entity_service(
         hass, DOMAIN, "UpbLight", "light_fade_stop", LIGHT_FADE_STOP_SCHEMA
     )
+    create_entity_service(hass, DOMAIN, "UpbLight", "light_blink", LIGHT_BLINK_SCHEMA)
     create_entity_service(
-        hass, DOMAIN, "UpbLight", "light_blink", LIGHT_BLINK_SCHEMA
-    )
-    create_entity_service(
-        hass,
-        DOMAIN,
-        "UpbLight",
-        "light_update_status",
-        LIGHT_UPDATE_STATUS_SCHEMA,
+        hass, DOMAIN, "UpbLight", "light_update_status", LIGHT_UPDATE_STATUS_SCHEMA
     )
 
 

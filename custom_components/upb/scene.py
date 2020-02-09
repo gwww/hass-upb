@@ -74,18 +74,14 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     create_entity_service(
         hass, DOMAIN, "UpbLink", "link_deactivate", LINK_DEACTIVATE_SCHEMA
     )
-    create_entity_service(
-        hass, DOMAIN, "UpbLink", "link_goto", LINK_GOTO_SCHEMA
-    )
+    create_entity_service(hass, DOMAIN, "UpbLink", "link_goto", LINK_GOTO_SCHEMA)
     create_entity_service(
         hass, DOMAIN, "UpbLink", "link_fade_start", LINK_FADE_START_SCHEMA
     )
     create_entity_service(
         hass, DOMAIN, "UpbLink", "link_fade_stop", LINK_FADE_STOP_SCHEMA
     )
-    create_entity_service(
-        hass, DOMAIN, "UpbLink", "link_blink", LINK_BLINK_SCHEMA
-    )
+    create_entity_service(hass, DOMAIN, "UpbLink", "link_blink", LINK_BLINK_SCHEMA)
 
     upb = hass.data[DOMAIN]["upb"]
     async_add_entities(UpbLink(upb.links[link], upb) for link in upb.links)

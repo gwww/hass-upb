@@ -132,4 +132,7 @@ class UpbLight(UpbEntity, Light):
 
     def _element_changed(self, element, changeset):
         status = self._element.status
-        self._brightness = round(status * 2.55)
+        if status is None:
+            self._brightness = 0
+        else:
+            self._brightness = round(status * 2.55)

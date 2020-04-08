@@ -16,11 +16,11 @@ The `file_path` is the path and filename of the UPStart file export. The export 
 UPB devices (lights, switches, etc) are represented as Lights in Home Assistant. Turning the devices on and off as is supported.
 Dimming is supported for devices that support dimming. Transition time is supported for devices that support dimming.
 
-UPB Links are support as Lights in Home Assistant. Links support Activate, Deactivate, and Goto level.
+UPB Links are supported as Scenes in Home Assistant. UPB links support Activate, Deactivate, and Goto level.
 
 ## Development Status
 
-This component is under active development. Treat this as an alpha level component.
+This component is under active development. Treat this as an beta level component.
 That means that naming of devices, entity_ids, and unique_ids may change, meaning that your UPB configuration may need to be redone.
 
 Feature suggestions, bug reports, and design thoughts all welcome.

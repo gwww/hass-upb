@@ -57,7 +57,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         return
 
     upb = hass.data[DOMAIN]["upb"]
-    async_add_entities(UpbLight(upb.lights[light], upb) for light in upb.lights)
+    async_add_entities(UpbLight(upb.devices[dev], upb) for dev in upb.devices)
 
     create_entity_service(
         hass, DOMAIN, "UpbLight", "light_fade_start", LIGHT_FADE_START_SCHEMA

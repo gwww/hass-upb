@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Home Assistant
+*.yaml
+.storage
+home-assistant*.*
+.HA_VERSION
+local
